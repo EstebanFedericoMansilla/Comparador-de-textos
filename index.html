@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Comparador de Textos</title>
+<style>
+body {
+  font-family: sans-serif; 
+  font-size: **1.2em**; /* Increase font size by 20% */
+}
+
+.container {
+  display: flex;
+}
+
+.text-area {
+  flex: 1;
+  margin: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  height: 200px;
+  resize: vertical;
+}
+
+.button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #45a049;
+}
+
+.highlighted {
+  background-color: yellow;
+}
+
+.donate-button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #FFC107; /* Amarillo */
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.donate-button:hover {
+  background-color: #FFD700; /* Amarillo más claro */
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <textarea class="text-area" id="texto-superior"></textarea>
+  <textarea class="text-area" id="texto-inferior"></textarea>
+</div>
+
+<button class="button" onclick="comparar()">Comparar</button>
+
+<button class="donate-button" onclick="window.location.href='https://paypal.me/Estebanfederico/donaciones'">Donar</button>
+
+<script>
+let estadoBoton = false;
+
+function comparar() {
+  estadoBoton = !estadoBoton;
+
+  const textoSuperior = document.getElementById("texto-superior").value.trim();
+  const textoInferior = document.getElementById("texto-inferior").value.trim();
+
+  if (estadoBoton) {
+    resaltarDiferencias(textoSuperior, textoInferior);
+  } else {
+    limpiarResaltado();
+  }
+}
+
+function resaltarDiferencias(texto1, texto2) {
+  const lineas1 = texto1.split("\n");
+  const lineas2 = texto2.split("\n");
+  const diferencias = difflib.ndiff(lineas1, lineas2);
+
+  const textoSuperior = document.getElementById("texto-superior");
+  textoSuperior.innerHTML = "";
+
+  let i = 1;
+  for (const linea of diferencias) {
+    if (linea.startsWith('+') || linea.startsWith('-')) {
+      textoSuperior.innerHTML += `<span class="highlighted">${linea.substring(1)}</span><br>`;
+    } else {
+      textoSuperior.innerHTML += `${linea}<br>`;
+    }
+    i++;
+  }
+}
+
+function limpiarResaltado() {
+  const textoSuperior = document.getElementById("texto-superior");
+  textoSuperior.innerHTML = "";
+}
+</script>
+
+</body>
+</html>
